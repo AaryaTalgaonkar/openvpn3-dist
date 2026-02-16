@@ -1,0 +1,70 @@
+name: Build Windows Installer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: windows-2022
+
+    env:
+      ARCH: amd64
+
+    steps:
+
+    - name: Checkout packaging repo
+      uses: actions/checkout@v4
+
+    - name: Download GUI artifact
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        repo: AaryaTalgaonkar/openvpn3-gui
+        workflow: build.yml
+        branch: main
+        name: windows-${{ env.ARCH }}
+        path: gui
+
+    # --------------------------------------------
+    # Download Backend artifacts
+    # --------------------------------------------
+    - name: Download Backend artifact
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        repo: AaryaTalgaonkar/openvpn3
+        workflow: build.yml
+        branch: main
+        name: windows-${{ env.ARCH }}
+        path: openvpn3/${{ env.ARCH }}
+
+    # --------------------------------------------
+    # Drivers already committed in packaging repo
+    # drivers/tap-win/amd64/*
+    # --------------------------------------------
+
+    # --------------------------------------------
+    # Install WiX v4
+    # --------------------------------------------
+    - name: Install WiX
+      shell: powershell
+      run: |
+        dotnet tool install --global wix
+        echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
+    # --------------------------------------------
+    # Build MSI
+    # --------------------------------------------
+    - name: Build MSI
+      shell: powershell
+      run: |
+        wix build Product_${{ env.ARCH }}.wxs Gui.wxs `
+          -arch x64 `
+          -o IITDelhiVPN-${{ github.ref_name }}-x64.msi
+
+    # --------------------------------------------
+    # Upload Final Installer
+    # --------------------------------------------
+    - name: Upload MSI
+      uses: actions/upload-artifact@v4
+      with:
+        name: IITDelhiVPN-x64
+        path: IITDelhiVPN-*.msi
