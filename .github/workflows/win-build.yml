@@ -106,7 +106,7 @@ jobs:
     - name: Build MSI
       shell: powershell
       run: |
-        wix build Product.wxs Gui.wxs `
+        wix build windows\Product.wxs windows\Gui.wxs `
           -arch ${{matrix.arch}} `
           -o IITDelhiVPN-${{matrix.arch}}.msi
 
