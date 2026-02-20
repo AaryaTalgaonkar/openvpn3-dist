@@ -58,11 +58,11 @@
                  Guid="f9926af4-e88e-404b-a942-94c48a9fe27f">
 
         <File Id="TapInstallExe"
-              Source="drivers\tap-win\amd64\tapinstall.exe"
+              Source="tap-driver\tapinstall.exe"
               KeyPath="yes"/>
 
-        <File Source="drivers\tap-win\amd64\OemVista.inf"/>
-        <File Source="drivers\tap-win\amd64\tap0901.sys"/>
+        <File Source="tap-driver\OemVista.inf"/>
+        <File Source="tap-driver\tap0901.sys"/>
 
       </Component>
 
@@ -77,14 +77,14 @@
                  Guid="fd34089c-da4d-4eb5-ac82-3f4778b28ab4">
 
         <File Id="OvpnAgentExe"
-              Source="openvpn3\amd64\ovpnagent.exe"
+              Source="openvpn3\ovpnagent.exe"
               KeyPath="yes"/>
 
-        <File Source="openvpn3\amd64\ovpncliagent.exe"/>
-        <File Source="openvpn3\amd64\jsoncpp.dll"/>
-        <File Source="openvpn3\amd64\libcrypto-3-x64.dll"/>
-        <File Source="openvpn3\amd64\libssl-3-x64.dll"/>
-        <File Source="openvpn3\amd64\lz4.dll"/>
+        <File Source="openvpn3\ovpncliagent.exe"/>
+        <File Source="openvpn3\jsoncpp.dll"/>
+        <File Source="openvpn3\libcrypto-3-x64.dll"/>
+        <File Source="openvpn3\libssl-3-x64.dll"/>
+        <File Source="openvpn3\lz4.dll"/>
 
         <!-- SERVICE INSTALL -->
         <ServiceInstall
