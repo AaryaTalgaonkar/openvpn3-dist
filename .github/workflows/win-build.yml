@@ -27,11 +27,11 @@ jobs:
             driver_arch: amd64
             os_type: win10
     
-          - name: Windows 10 arm64
-            runner: windows-2022
-            arch: arm64
-            driver_arch: arm64
-            os_type: win10
+          # - name: Windows 10 arm64
+          #   runner: windows-2022
+          #   arch: arm64
+          #   driver_arch: arm64
+          #   os_type: win10
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
