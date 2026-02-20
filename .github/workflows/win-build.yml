@@ -4,12 +4,37 @@ on:
   workflow_dispatch:
 
 jobs:
-  package:
-    runs-on: windows-2022
+  package-windows:
+    strategy:
+      matrix:
+        include:
+    
+          - name: Windows 11 amd64
+            runner: windows-2025
+            arch: x64
+            driver_arch: amd64
+            os_type: win11
+    
+          - name: Windows 11 arm64
+            runner: windows-2025
+            arch: arm64
+            driver_arch: arm64
+            os_type: win11
+    
+          - name: Windows 10 amd64
+            runner: windows-2022
+            arch: x64
+            driver_arch: amd64
+            os_type: win10
+    
+          - name: Windows 10 arm64
+            runner: windows-2022
+            arch: arm64
+            driver_arch: arm64
+            os_type: win10
 
-    env:
-      ARCH: amd64
-
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
     steps:
 
     - name: Checkout packaging repo
@@ -21,50 +46,58 @@ jobs:
         repo: AaryaTalgaonkar/openvpn3-gui
         workflow: build.yml
         branch: main
-        name: windows-${{ env.ARCH }}
+        name: OpenVPN3-GUI-${{ matrix.name }}
         path: gui
-
-    # --------------------------------------------
-    # Download Backend artifacts
-    # --------------------------------------------
+        
     - name: Download Backend artifact
       uses: dawidd6/action-download-artifact@v3
       with:
         repo: AaryaTalgaonkar/openvpn3
         workflow: build.yml
         branch: main
-        name: windows-${{ env.ARCH }}
-        path: openvpn3/${{ env.ARCH }}
+        name: backend-build-win-${{matrix.arch}}
+        path: openvpn3
 
-    # --------------------------------------------
-    # Drivers already committed in packaging repo
-    # drivers/tap-win/amd64/*
-    # --------------------------------------------
-
-    # --------------------------------------------
-    # Install WiX v4
-    # --------------------------------------------
     - name: Install WiX
       shell: powershell
       run: |
         dotnet tool install --global wix
         echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
-
-    # --------------------------------------------
-    # Build MSI
-    # --------------------------------------------
+    
+    - name: Extract TAP Driver Files
+      shell: powershell
+      run: |
+    
+        $zipPath = "windows/tap-windows.zip"
+        $extractRoot = "tap-extracted"
+        $dest = "tap-driver"
+    
+        Expand-Archive -Path $zipPath -DestinationPath $extractRoot -Force
+    
+        if ("${{ matrix.os_type }}" -eq "win10") {
+            $source = Join-Path $extractRoot "${{ matrix.driver_arch }}/win10"
+        }
+        else {
+            $source = Join-Path $extractRoot "${{ matrix.driver_arch }}"
+        }
+    
+        New-Item -ItemType Directory -Path $dest -Force | Out-Null
+    
+        Copy-Item "$source/OemVista" -Destination $dest -Recurse -Force
+        Copy-Item "$source/tap0901*" -Destination $dest -Recurse -Force
+        Copy-Item "$source/tapinstall.exe" -Destination $dest -Force
+    
+        Write-Host "Driver files extracted successfully."
+        
     - name: Build MSI
       shell: powershell
       run: |
-        wix build Product_${{ env.ARCH }}.wxs Gui.wxs `
-          -arch x64 `
-          -o IITDelhiVPN-${{ github.ref_name }}-x64.msi
+        wix build Product.wxs Gui.wxs `
+          -arch ${{matrix.arch}} `
+          -o IITDelhiVPN-${{matrix.arch}}.msi
 
-    # --------------------------------------------
-    # Upload Final Installer
-    # --------------------------------------------
     - name: Upload MSI
       uses: actions/upload-artifact@v4
       with:
-        name: IITDelhiVPN-x64
-        path: IITDelhiVPN-*.msi
+        name: IITDelhiVPN-${{matrix.arch}}
+        path: IITDelhiVPN-${{matrix.arch}}.msi
