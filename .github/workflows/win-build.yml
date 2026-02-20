@@ -54,7 +54,7 @@ jobs:
       with:
         repo: AaryaTalgaonkar/openvpn3
         workflow: build.yml
-        branch: main
+        branch: master
         name: backend-build-win-${{matrix.arch}}
         path: openvpn3
 
