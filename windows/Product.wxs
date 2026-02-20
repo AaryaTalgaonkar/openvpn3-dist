@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package
+    Name="IITDelhiVPN"
+    Version="1.0.0"
+    Manufacturer="IIT Delhi"
+    UpgradeCode="949A75F8-69B4-4981-B2FA-60695CEED6FE"
+    Scope="perMachine">
+
+    <MediaTemplate EmbedCab="yes"/>
+
+    <!-- ===================================================== -->
+    <!-- DIRECTORIES -->
+    <!-- ===================================================== -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+
+      <Directory Id="INSTALLDIR" Name="IITDelhiVPN">
+        <Directory Id="OPENVPNDIR" Name="openvpn3"/>
+        <Directory Id="GUIDIR" Name="gui"/>
+        <Directory Id="DRIVERDIR" Name="drivers">
+          <Directory Id="TAPDIR" Name="tap-win"/>
+        </Directory>
+
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppProgramsFolder" Name="IITDelhiVPN"/>
+    </StandardDirectory>
+
+    <!-- ===================================================== -->
+    <!-- REGISTRY COMPONENT -->
+    <!-- ===================================================== -->
+    <Component
+      Id="RegistryEntries"
+      Guid="82fdf3eb-e307-4cc8-af33-23ce3b5e7518">
+
+      <RegistryKey Root="HKLM" Key="SOFTWARE\OpenVPN">
+        <RegistryValue
+          Name="omi_exe_path"
+          Type="string"
+          Value=""
+          KeyPath="yes"/>
+      </RegistryKey>
+
+    </Component>
+
+    <!-- ===================================================== -->
+    <!-- TAP DRIVER FILES -->
+    <!-- ===================================================== -->
+    <ComponentGroup Id="TapFiles" Directory="TAPDIR">
+
+      <Component Id="TapComponent"
+                 Guid="f9926af4-e88e-404b-a942-94c48a9fe27f">
+
+        <File Id="TapInstallExe"
+              Source="drivers\tap-win\amd64\tapinstall.exe"
+              KeyPath="yes"/>
+
+        <File Source="drivers\tap-win\amd64\OemVista.inf"/>
+        <File Source="drivers\tap-win\amd64\tap0901.sys"/>
+
+      </Component>
+
+    </ComponentGroup>
+
+    <!-- ===================================================== -->
+    <!-- OPENVPN AGENT + SERVICE -->
+    <!-- ===================================================== -->
+    <ComponentGroup Id="OpenVPNFiles" Directory="OPENVPNDIR">
+
+      <Component Id="OvpnAgentComponent"
+                 Guid="fd34089c-da4d-4eb5-ac82-3f4778b28ab4">
+
+        <File Id="OvpnAgentExe"
+              Source="openvpn3\amd64\ovpnagent.exe"
+              KeyPath="yes"/>
+
+        <File Source="openvpn3\amd64\ovpncliagent.exe"/>
+        <File Source="openvpn3\amd64\jsoncpp.dll"/>
+        <File Source="openvpn3\amd64\libcrypto-3-x64.dll"/>
+        <File Source="openvpn3\amd64\libssl-3-x64.dll"/>
+        <File Source="openvpn3\amd64\lz4.dll"/>
+
+        <!-- SERVICE INSTALL -->
+        <ServiceInstall
+          Id="OvpnAgentServiceInstall"
+          Name="ovpnagent"
+          DisplayName="OpenVPN Agent"
+          Description="OpenVPN 3 Agent Service"
+          Type="ownProcess"
+          Start="auto"
+          ErrorControl="normal"/>
+
+        <!-- SERVICE CONTROL -->
+        <ServiceControl
+          Id="OvpnAgentServiceControl"
+          Name="ovpnagent"
+          Start="install"
+          Stop="both"
+          Remove="uninstall"
+          Wait="yes"/>
+
+      </Component>
+
+    </ComponentGroup>
+
+    <!-- ===================================================== -->
+    <!-- CUSTOM ACTIONS -->
+    <!-- ===================================================== -->
+
+    <!-- Install TAP driver -->
+    <CustomAction
+      Id="InstallTap"
+      FileRef="TapInstallExe"
+      ExeCommand='install "[TAPDIR]OemVista.inf" tap0901'
+      Execute="deferred"
+      Impersonate="no"
+      Return="check"/>
+
+    <!-- Remove TAP driver -->
+    <CustomAction
+      Id="RemoveTap"
+      FileRef="TapInstallExe"
+      ExeCommand='remove tap0901'
+      Execute="deferred"
+      Impersonate="no"
+      Return="check"/>
+
+    <!-- ===================================================== -->
+    <!-- EXECUTION SEQUENCE -->
+    <!-- ===================================================== -->
+    <InstallExecuteSequence>
+
+      <Custom
+        Action="InstallTap"
+        After="InstallFiles"
+        Condition="NOT Installed"/>
+
+      <Custom
+        Action="RemoveTap"
+        Before="RemoveFiles"
+        Condition="Installed"/>
+
+    </InstallExecuteSequence>
+
+    <!-- ===================================================== -->
+    <!-- FEATURE -->
+    <!-- ===================================================== -->
+    <Feature Id="MainFeature"
+             Title="IIT Delhi VPN"
+             Level="1">
+
+      <ComponentRef Id="RegistryEntries"/>
+      <ComponentGroupRef Id="TapFiles"/>
+      <ComponentGroupRef Id="OpenVPNFiles"/>
+      <ComponentGroupRef Id="GuiFiles"/>
+    </Feature>
+
+  </Package>
+</Wix>
