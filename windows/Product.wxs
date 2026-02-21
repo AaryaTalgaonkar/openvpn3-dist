@@ -102,7 +102,7 @@
           Wait="yes"/>
 
       </Component>
-        <Files Source="openvpn3\*.dll"/>
+        <Files Include="openvpn3\*.dll"/>
     </ComponentGroup>
 
     <!-- ===================================================== -->
