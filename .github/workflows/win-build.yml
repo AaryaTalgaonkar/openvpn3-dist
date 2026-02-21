@@ -106,9 +106,10 @@ jobs:
     - name: Build MSI
       shell: powershell
       run: |
-        wix build windows\Product.wxs windows\Gui.wxs `
-          -arch ${{matrix.arch}} `
-          -o IITDelhiVPN-${{matrix.arch}}.msi
+            wix build windows\Product.wxs windows\Gui.wxs `
+              -arch arm64 `
+              -dRepoRoot="${{ github.workspace }}" `
+              -o IITDelhiVPN-${{matrix.arch}}.msi
 
     - name: Upload MSI
       uses: actions/upload-artifact@v4
