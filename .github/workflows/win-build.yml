@@ -21,11 +21,11 @@ jobs:
             driver_arch: arm64
             os_type: win11
     
-          - name: Windows 10 amd64
-            runner: windows-2022
-            arch: x64
-            driver_arch: amd64
-            os_type: win10
+          # - name: Windows 10 amd64
+          #   runner: windows-2022
+          #   arch: x64
+          #   driver_arch: amd64
+          #   os_type: win10
     
           # - name: Windows 10 arm64
           #   runner: windows-2022
