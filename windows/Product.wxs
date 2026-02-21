@@ -80,11 +80,8 @@
               Source="openvpn3\ovpnagent.exe"
               KeyPath="yes"/>
 
-        <File Source="openvpn3\ovpncliagent.exe"/>
-        <File Source="openvpn3\jsoncpp.dll"/>
-        <File Source="openvpn3\libcrypto-3-x64.dll"/>
-        <File Source="openvpn3\libssl-3-x64.dll"/>
-        <File Source="openvpn3\lz4.dll"/>
+        <File Source="openvpn3\omicliagent.exe"/>
+        <Files Source="openvpn3\*.dll"/>
 
         <!-- SERVICE INSTALL -->
         <ServiceInstall
