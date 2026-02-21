@@ -108,7 +108,6 @@ jobs:
       run: |
             wix build windows\Product.wxs windows\Gui.wxs `
               -arch arm64 `
-              -dRepoRoot="${{ github.workspace }}" `
               -o IITDelhiVPN-${{matrix.arch}}.msi
 
     - name: Upload MSI
