@@ -102,7 +102,7 @@
           Wait="yes"/>
 
       </Component>
-        <Files Include="openvpn3\*.dll"/>
+        <Files Include="$(var.RepoRoot)\openvpn3\*.dll" />
     </ComponentGroup>
 
     <!-- ===================================================== -->
