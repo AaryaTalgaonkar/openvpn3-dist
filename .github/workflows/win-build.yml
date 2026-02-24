@@ -102,13 +102,6 @@ jobs:
         Copy-Item (Join-Path $source "tapinstall.exe") -Destination $dest -Force
     
         Write-Host "Driver files extracted successfully from $source"
-    - name: Show directory tree
-      shell: powershell
-      run: |
-            Write-Host "Current directory:"
-            Get-Location
-            Write-Host "`nFull tree:"
-            Get-ChildItem -Recurse   
     - name: Build MSI
       shell: powershell
       run: |
