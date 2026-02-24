@@ -35,10 +35,11 @@
   <RemoveFolder Id="RemoveAppProgramsFolder"
                 Directory="AppProgramsFolder"
                 On="uninstall"/>
-        <ComponentGroup Id="GuiRootFiles" Directory="GUIDIR">
-          <Files Include="gui\*.dll"/>
-        </ComponentGroup>
       </Component>
+
+    <ComponentGroup Id="GuiRootFiles" Directory="GUIDIR">
+      <Files Include="gui\*.dll"/>
+    </ComponentGroup>
 
       <!-- platforms -->
     <ComponentGroup Id="GuiPlatformFiles" Directory="PLATFORMSDIR">
