@@ -1,0 +1,115 @@
+name: Build Debian Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  package:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+
+          # --------------------
+          # Ubuntu
+          # --------------------
+          - name: Ubuntu 22.04 amd64
+            runner: ubuntu-22.04
+            arch: amd64
+            version: 22.04
+
+          - name: Ubuntu 24.04 amd64
+            runner: ubuntu-24.04
+            arch: amd64
+            version: 24.04
+
+          # - name: Ubuntu 22.04 arm64
+          #   runner: ubuntu-22.04-arm
+          #   arch: arm64
+          #   version: 22.04
+
+          - name: Ubuntu 24.04 arm64
+            runner: ubuntu-24.04-arm
+            arch: arm64
+            version: 24.04
+
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # -----------------------------
+      # Download Backend Artifact
+      # -----------------------------
+      - name: Download backend
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build-${{ matrix.runner }}
+          path: backend
+
+      # -----------------------------
+      # Download GUI Artifact
+      # -----------------------------
+      - name: Download GUI
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-build-${{ matrix.runner }}
+          path: gui
+
+      # -----------------------------
+      # Create package structure
+      # -----------------------------
+      - name: Prepare package root
+        run: |
+          mkdir -p pkgroot/DEBIAN
+          mkdir -p pkgroot/usr
+
+          # copy backend
+          cp -r backend/usr/* pkgroot/usr/
+
+          # copy gui
+          cp -r gui/usr/* pkgroot/usr/
+
+
+
+      # -----------------------------
+      # Create control file
+      # -----------------------------
+      - name: Create control file
+        run: |
+          cat <<EOF > pkgroot/DEBIAN/control
+          Package: openvpn3-gui
+          Version: 1.0.0
+          Section: net
+          Priority: optional
+          Architecture: ${{ matrix.arch }}
+          Maintainer: Your Name <you@example.com>
+          Depends: libc6 (>= 2.31), libssl3
+          Description: OpenVPN3 GUI with bundled backend
+           OpenVPN3 GUI and backend packaged together.
+          EOF
+
+      # -----------------------------
+      # Fix permissions
+      # -----------------------------
+      - name: Fix permissions
+        run: |
+          chmod -R 755 pkgroot/usr
+          chmod 755 pkgroot/DEBIAN
+          chmod 644 pkgroot/DEBIAN/control
+
+      # -----------------------------
+      # Build .deb
+      # -----------------------------
+      - name: Build deb
+        run: |
+          dpkg-deb --build pkgroot openvpn3-gui_${{ matrix.arch }}.deb
+
+      # -----------------------------
+      # Upload artifact
+      # -----------------------------
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvpn3-gui-${{ matrix.arch }}-${{matrix.version}}
+          path: openvpn3-gui_${{ matrix.arch }}-${{matrix.version}}.deb
