@@ -35,68 +35,30 @@
   <RemoveFolder Id="RemoveAppProgramsFolder"
                 Directory="AppProgramsFolder"
                 On="uninstall"/>
-        <File Source="gui\Qt6Core.dll"/>
-        <File Source="gui\Qt6Gui.dll"/>
-        <File Source="gui\Qt6Network.dll"/>
-        <File Source="gui\Qt6Svg.dll"/>
-        <File Source="gui\D3Dcompiler_47.dll"/>
-        <File Source="gui\opengl32sw.dll"/>
-        <File Source="gui\Qt6Widgets.dll"/>
+        <ComponentGroup Id="GuiRootFiles" Directory="GUIDIR">
+          <Files Include="gui\*.dll"/>
+        </ComponentGroup>
       </Component>
 
       <!-- platforms -->
-      <Component Directory="PLATFORMSDIR" Guid="16f9b84d-d47f-4833-9e5a-e9eaf352adc6">
-        <File Source="gui\platforms\qwindows.dll" KeyPath="yes"/>
-      </Component>
+    <ComponentGroup Id="GuiPlatformFiles" Directory="PLATFORMSDIR">
+      <Files Include="gui\platforms\*.dll"/>
+    </ComponentGroup>
 
       <!-- styles -->
-      <Component Directory="STYLESDIR" Guid="d341cd02-5a84-40c0-bbc8-11eb9a0375d6">
-        <File Source="gui\styles\qmodernwindowsstyle.dll" KeyPath="yes"/>
-      </Component>
+    <ComponentGroup Id="GuiStyleFiles" Directory="STYLESDIR">
+      <Files Include="gui\styles\*.dll"/>
+    </ComponentGroup>
 
       <!-- imageformats -->
-      <Component Directory="IMAGEFORMATSDIR" Guid="878302af-c8f0-4e00-b61c-81e52052e49e">
-        <File Source="gui\imageformats\qgif.dll" KeyPath="yes"/>
-        <File Source="gui\imageformats\qico.dll"/>
-        <File Source="gui\imageformats\qjpeg.dll"/>
-        <File Source="gui\imageformats\qsvg.dll"/>
-      </Component>
+    <ComponentGroup Id="GuiImageFormatFiles" Directory="IMAGEFORMATSDIR">
+      <Files Include="gui\imageformats\*.dll"/>
+    </ComponentGroup>
 
       <!-- translations -->
-      <Component Directory="TRANSLATIONSDIR" Guid="67d0316c-4bac-4d7a-bdcd-7c0cff4cd8ac">
-        <File Source="gui\translations\qt_ar.qm" KeyPath="yes"/>
-        <File Source="gui\translations\qt_bg.qm"/>
-        <File Source="gui\translations\qt_ca.qm"/>
-        <File Source="gui\translations\qt_cs.qm"/>
-        <File Source="gui\translations\qt_da.qm"/>
-        <File Source="gui\translations\qt_de.qm"/>
-        <File Source="gui\translations\qt_en.qm"/>
-        <File Source="gui\translations\qt_es.qm"/>
-        <File Source="gui\translations\qt_fa.qm"/>
-        <File Source="gui\translations\qt_fi.qm"/>
-        <File Source="gui\translations\qt_fr.qm"/>
-        <File Source="gui\translations\qt_gd.qm"/>
-        <File Source="gui\translations\qt_he.qm"/>
-        <File Source="gui\translations\qt_hr.qm"/>
-        <File Source="gui\translations\qt_hu.qm"/>
-        <File Source="gui\translations\qt_it.qm"/>
-        <File Source="gui\translations\qt_ja.qm"/>
-        <File Source="gui\translations\qt_ka.qm"/>
-        <File Source="gui\translations\qt_ko.qm"/>
-        <File Source="gui\translations\qt_lg.qm"/>
-        <File Source="gui\translations\qt_lv.qm"/>
-        <File Source="gui\translations\qt_nl.qm"/>
-        <File Source="gui\translations\qt_nn.qm"/>
-        <File Source="gui\translations\qt_pt_BR.qm"/>
-        <File Source="gui\translations\qt_ru.qm"/>
-        <File Source="gui\translations\qt_sk.qm"/>
-        <File Source="gui\translations\qt_sv.qm"/>
-        <File Source="gui\translations\qt_tr.qm"/>
-        <File Source="gui\translations\qt_uk.qm"/>
-        <File Source="gui\translations\qt_zh_CN.qm"/>
-        <File Source="gui\translations\qt_zh_TW.qm"/>
-      </Component>
-
+    <ComponentGroup Id="GuiTranslationFiles" Directory="TRANSLATIONSDIR">
+      <Files Include="gui\translations\*.qm"/>
+    </ComponentGroup>
     </ComponentGroup>
 
   </Fragment>
