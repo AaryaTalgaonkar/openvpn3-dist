@@ -9,7 +9,7 @@
     UpgradeCode="949A75F8-69B4-4981-B2FA-60695CEED6FE"
     Scope="perMachine">
 
-    <Icon Id="AppIcon" SourceFile="windows\logo.ico"/>
+    <Icon Id="AppIcon" SourceFile="logo.ico"/>
     <Property Id="ARPPRODUCTICON" Value="AppIcon"/>
 
     <MediaTemplate EmbedCab="yes"/>
