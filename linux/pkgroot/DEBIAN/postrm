@@ -2,8 +2,8 @@
 set -e
 
 if [ "$1" = "purge" ]; then
-    userdel openvpn 2>/dev/null || true
-    groupdel openvpn 2>/dev/null || true
+    sudo userdel openvpn 2>/dev/null || true
+    sudo groupdel openvpn 2>/dev/null || true
 fi
 
 exit 0
