@@ -113,5 +113,5 @@ jobs:
     - name: Upload MSI
       uses: actions/upload-artifact@v4
       with:
-        name: IITDelhiVPN-${{matrix.arch}}
+        name: IITDelhiVPN-${{matrix.arch}}.msi
         path: windows/IITDelhiVPN-${{matrix.arch}}.msi
