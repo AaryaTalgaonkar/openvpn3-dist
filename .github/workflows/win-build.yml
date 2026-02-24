@@ -104,7 +104,7 @@ jobs:
         Write-Host "Driver files extracted successfully from $source"
     
     - name: Build MSI
-      shell: powersshell
+      shell: powershell
       run: |
             cd windows
             wix build Product.wxs Gui.wxs `
