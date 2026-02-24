@@ -1,16 +1,6 @@
 #!/bin/bash
 set -e
 
-# Create group if not exists
-if ! getent group openvpn >/dev/null; then
-    groupadd -r openvpn
-fi
-
-# Create user if not exists
-if ! id -u openvpn >/dev/null 2>&1; then
-    useradd -r -s /usr/sbin/nologin -g openvpn openvpn
-fi
-
 # Initialize configs
 if command -v openvpn3-admin >/dev/null; then
     sudo openvpn3-admin init-config --write-configs || true
