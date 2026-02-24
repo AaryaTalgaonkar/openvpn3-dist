@@ -13,7 +13,7 @@ fi
 
 # Initialize configs
 if command -v openvpn3-admin >/dev/null; then
-    openvpn3-admin init-config --write-configs || true
+    sudo openvpn3-admin init-config --write-configs || true
 fi
 
 # Reload dbus
