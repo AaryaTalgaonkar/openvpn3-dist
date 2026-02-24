@@ -1,5 +1,6 @@
 Package: iitdelhivpn
 Version: 1.0.0
+Architecture: any
 Section: net
 Priority: optional
 Maintainer: IIT Delhi  <you@example.com>
