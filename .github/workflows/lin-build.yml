@@ -66,20 +66,70 @@ jobs:
           mkdir -p pkgroot/usr
           
           cat > pkgroot/DEBIAN/control <<EOF
-          Package: IITDelhiVPN
+          Package: iitdelhivpn
           Version: 1.0.0
           Section: net
           Priority: optional
           Architecture: ${{ matrix.arch }}
-          Maintainer: You <you@example.com>
-          Depends: libssl3
+          Maintainer: IIT Delhi  <you@example.com>
           Description: Custom OpenVPN3 with GUI
            Backend daemon and Qt GUI.
+          EOF
+
+          cat > pkgroot/DEBIAN/postinst <<'EOF'
+          #!/bin/bash
+          set -e
+          
+          # Create group if not exists
+          if ! getent group openvpn >/dev/null; then
+              groupadd -r openvpn
+          fi
+          
+          # Create user if not exists
+          if ! id -u openvpn >/dev/null 2>&1; then
+              useradd -r -s /usr/sbin/nologin -g openvpn openvpn
+          fi
+          
+          # Initialize configs
+          if command -v openvpn3-admin >/dev/null; then
+              openvpn3-admin init-config --write-configs || true
+          fi
+          
+          # Reload dbus
+          systemctl reload dbus || true
+          
+          exit 0
+          EOF
+
+          cat > pkgroot/DEBIAN/prerm <<'EOF'
+          #!/bin/bash
+          set -e
+          
+          # Stop services if any
+          systemctl stop openvpn3 2>/dev/null || true
+          
+          exit 0
+          EOF
+
+          cat > pkgroot/DEBIAN/postrm <<'EOF'
+          #!/bin/bash
+          set -e
+          
+          if [ "$1" = "purge" ]; then
+              userdel openvpn 2>/dev/null || true
+              groupdel openvpn 2>/dev/null || true
+          fi
+          
+          exit 0
           EOF
           
           cp -r linux/backend/usr/* pkgroot/usr/
           cp -r linux/gui/* pkgroot/usr/
-
+          
+          chmod 755 pkgroot/DEBIAN/postinst
+          chmod 755 pkgroot/DEBIAN/prerm
+          chmod 755 pkgroot/DEBIAN/postrm
+          chmod 644 pkgroot/DEBIAN/control
       # -----------------------------
       # Build .deb
       # -----------------------------
