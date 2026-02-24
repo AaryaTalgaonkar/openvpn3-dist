@@ -47,7 +47,7 @@ jobs:
         workflow: build.yml
         branch: main
         name: OpenVPN3-GUI-${{ matrix.name }}
-        path: gui
+        path: windows\gui
         
     - name: Download Backend artifact
       uses: dawidd6/action-download-artifact@v3
