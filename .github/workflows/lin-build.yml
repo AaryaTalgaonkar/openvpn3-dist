@@ -68,7 +68,8 @@ jobs:
           
           cp -r backend/usr/* pkgroot/usr/
           cp -r gui/* pkgroot/usr/
-          
+
+          chmod 755 pkgroot/DEBIAN/preinst
           chmod 755 pkgroot/DEBIAN/postinst
           chmod 755 pkgroot/DEBIAN/prerm
           chmod 755 pkgroot/DEBIAN/postrm
