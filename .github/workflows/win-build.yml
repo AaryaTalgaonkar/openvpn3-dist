@@ -107,7 +107,7 @@ jobs:
       run: |
             cd windows
             wix build Product.wxs Gui.wxs `
-              -arch arm64 `
+              -arch ${{matrix.arch}} `
               -o IITDelhiVPN-${{matrix.arch}}.msi
 
     - name: Upload MSI
