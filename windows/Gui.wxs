@@ -2,65 +2,38 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 
   <Fragment>
-    <!-- ========================= -->
-    <!-- GUI DIRECTORIES -->
-    <!-- ========================= -->
-    <DirectoryRef Id="GUIDIR">
-      <Directory Id="PLATFORMSDIR" Name="platforms"/>
-      <Directory Id="STYLESDIR" Name="styles"/>
-      <Directory Id="IMAGEFORMATSDIR" Name="imageformats"/>
-      <Directory Id="TRANSLATIONSDIR" Name="translations"/>
-    </DirectoryRef>
 
-    <!-- ========================= -->
-    <!-- GUI FILES -->
-    <!-- ========================= -->
-    <ComponentGroup Id="GuiFiles">
+    <DirectoryRef Id="GUIDIR"/>
 
-      <!-- Root GUI files -->
-      <Component Directory="GUIDIR" Guid="55aad1f8-9bce-4073-b91c-678c25cc26df">
-          <File Id="GuiExe"
-            Source="gui\app.exe"
-            KeyPath="yes"/>
-
-            <Shortcut
-              Id="StartMenuShortcut"
-              Directory="AppProgramsFolder"
-              Name="IITDelhi VPN"
-              Description="IIT Delhi VPN Client"
-              Target="[GUIDIR]app.exe"
-              WorkingDirectory="GUIDIR"
-              Icon="AppIcon"
-              IconIndex="0"/>
-  <RemoveFolder Id="RemoveAppProgramsFolder"
-                Directory="AppProgramsFolder"
-                On="uninstall"/>
+    <ComponentGroup Id="GuiExeGroup">
+          <Component Id="GuiExeComponent"
+                 Directory="GUIDIR"
+                 Guid="55aad1f8-9bce-4073-b91c-678c25cc26df">
+    
+        <File Id="GuiExe"
+              Source="gui\app.exe"
+              KeyPath="yes"/>
+    
+        <Shortcut
+          Id="StartMenuShortcut"
+          Directory="AppProgramsFolder"
+          Name="IITDelhi VPN"
+          Description="IIT Delhi VPN Client"
+          Target="[GUIDIR]app.exe"
+          WorkingDirectory="GUIDIR"
+          Icon="AppIcon"
+          IconIndex="0"/>
+    
+        <RemoveFolder Id="RemoveAppProgramsFolder"
+                      Directory="AppProgramsFolder"
+                      On="uninstall"/>
+    
       </Component>
-
-    <ComponentGroup Id="GuiRootFiles" Directory="GUIDIR">
-      <Files Include="gui\*.dll"/>
+    
     </ComponentGroup>
-
-      <!-- platforms -->
-    <ComponentGroup Id="GuiPlatformFiles" Directory="PLATFORMSDIR">
-      <Files Include="gui\platforms\*.dll"/>
+   <ComponentGroup Id="GuiAllOtherFiles" Directory="GUIDIR">
+    <Files Include="gui\**\*.*"
+           Exclude="gui\app.exe"/>
     </ComponentGroup>
-
-      <!-- styles -->
-    <ComponentGroup Id="GuiStyleFiles" Directory="STYLESDIR">
-      <Files Include="gui\styles\*.dll"/>
-    </ComponentGroup>
-
-      <!-- imageformats -->
-    <ComponentGroup Id="GuiImageFormatFiles" Directory="IMAGEFORMATSDIR">
-      <Files Include="gui\imageformats\*.dll"/>
-    </ComponentGroup>
-
-      <!-- translations -->
-    <ComponentGroup Id="GuiTranslationFiles" Directory="TRANSLATIONSDIR">
-      <Files Include="gui\translations\*.qm"/>
-    </ComponentGroup>
-    </ComponentGroup>
-
   </Fragment>
 </Wix>
