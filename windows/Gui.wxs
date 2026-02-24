@@ -32,8 +32,9 @@
     
     </ComponentGroup>
    <ComponentGroup Id="GuiAllOtherFiles" Directory="GUIDIR">
-    <Files Include="gui\**\*.*"
-           Exclude="gui\app.exe"/>
+    <Files Include="gui\**\*.*">
+      <Exclude Files="gui\app.exe"/>
+    </Files>
     </ComponentGroup>
   </Fragment>
 </Wix>
