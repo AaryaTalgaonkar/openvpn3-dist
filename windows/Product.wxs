@@ -154,7 +154,8 @@
       <ComponentRef Id="RegistryEntries"/>
       <ComponentGroupRef Id="TapFiles"/>
       <ComponentGroupRef Id="OpenVPNFiles"/>
-      <ComponentGroupRef Id="GuiFiles"/>
+      <ComponentGroupRef Id="GuiExeGroup"/>
+      <ComponentGroupRef Id="GuiAllOtherFiles"/>
     </Feature>
 
   </Package>
