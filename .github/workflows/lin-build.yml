@@ -78,6 +78,7 @@ jobs:
       # -----------------------------
       - name: Build deb
         run: |
+          cd linux
           dpkg-deb --build pkgroot openvpn3-gui_${{ matrix.arch }}-${{matrix.version}}.deb
 
       # -----------------------------
