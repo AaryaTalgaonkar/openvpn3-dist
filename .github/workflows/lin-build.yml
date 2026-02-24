@@ -46,7 +46,7 @@ jobs:
           workflow: lin-build.yml
           branch: main
           name: OpenVPN3-GUI-${{ matrix.name }}
-          path: linux\gui
+          path: linux/gui
 
       - name: Download Backend artifact
         uses: dawidd6/action-download-artifact@v3
@@ -55,7 +55,7 @@ jobs:
           workflow: lin-build.yml
           branch: master
           name: backend-build-${{ matrix.runner }}
-          path: linux\backend
+          path: linux/backend
 
       # -----------------------------
       # Create package structure
@@ -64,16 +64,28 @@ jobs:
         run: |
           mkdir -p pkgroot/DEBIAN
           mkdir -p pkgroot/usr
-
-          cp -r backend/usr/* pkgroot/usr/
-          cp -r gui/* pkgroot/usr/
+          
+          cat > pkgroot/DEBIAN/control <<EOF
+          Package: openvpn3
+          Version: 1.0.0
+          Section: net
+          Priority: optional
+          Architecture: ${{ matrix.arch }}
+          Maintainer: You <you@example.com>
+          Depends: libssl3
+          Description: Custom OpenVPN3 with GUI
+           Backend daemon and Qt GUI.
+          EOF
+          
+          cp -r linux/backend/usr/* pkgroot/usr/
+          cp -r linux/gui/* pkgroot/usr/
 
       # -----------------------------
       # Build .deb
       # -----------------------------
       - name: Build deb
         run: |
-          dpkg-deb --build pkgroot openvpn3_${{ matrix.arch }}.deb
+          dpkg-deb --build pkgroot openvpn3-gui_${{ matrix.arch }}-${{matrix.version}}.deb
 
       # -----------------------------
       # Upload artifact
