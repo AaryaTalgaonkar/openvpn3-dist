@@ -89,4 +89,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openvpn3-gui-${{ matrix.arch }}-${{matrix.version}}
-          path: openvpn3-gui_${{ matrix.arch }}-${{matrix.version}}.deb
+          path: linux/openvpn3-gui_${{ matrix.arch }}-${{matrix.version}}.deb
