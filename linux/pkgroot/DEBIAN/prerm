@@ -1,1 +1,8 @@
+#!/bin/bash
+set -e
+
+# Stop services if any
+systemctl stop openvpn3 2>/dev/null || true
+
+exit 0
 
