@@ -3,5 +3,4 @@ Version: 1.0.0
 Section: net
 Priority: optional
 Maintainer: IIT Delhi  <you@example.com>
-Description: Custom OpenVPN3 with GUI
-Backend daemon and Qt GUI.
+Description: Custom OpenVPN3 with GUI Backend daemon and Qt GUI.
