@@ -104,9 +104,10 @@ jobs:
         Write-Host "Driver files extracted successfully from $source"
     
     - name: Build MSI
-      shell: powershell
+      shell: powersshell
       run: |
-            wix build windows\Product.wxs windows\Gui.wxs `
+            cd windows
+            wix build Product.wxs Gui.wxs `
               -arch arm64 `
               -o IITDelhiVPN-${{matrix.arch}}.msi
 
@@ -114,4 +115,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: IITDelhiVPN-${{matrix.arch}}
-        path: IITDelhiVPN-${{matrix.arch}}.msi
+        path: windows/IITDelhiVPN-${{matrix.arch}}.msi
