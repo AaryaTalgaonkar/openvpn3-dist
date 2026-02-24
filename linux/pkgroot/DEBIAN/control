@@ -1,1 +1,8 @@
-
+Package: iitdelhivpn
+Version: 1.0.0
+Section: net
+Priority: optional
+Architecture: ${{ matrix.arch }}
+Maintainer: IIT Delhi  <you@example.com>
+Description: Custom OpenVPN3 with GUI
+Backend daemon and Qt GUI.
