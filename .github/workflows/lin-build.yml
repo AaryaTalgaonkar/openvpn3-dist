@@ -48,34 +48,14 @@ jobs:
           name: OpenVPN3-GUI-${{ matrix.name }}
           path: linux\gui
 
-      - name: Download GUI artifact
+      - name: Download Backend artifact
         uses: dawidd6/action-download-artifact@v3
         with:
-          repo: AaryaTalgaonkar/openvpn3-gui
+          repo: AaryaTalgaonkar/openvpn3-linux
           workflow: lin-build.yml
-          branch: main
-          name: OpenVPN3-GUI-${{ matrix.name }}
-          path: linux\gui
-        
-      # -----------------------------
-      # Download Backend Artifact
-      # -----------------------------
-      - name: Download backend
-        uses: actions/download-artifact@v4
-        with:
+          branch: master
           name: backend-build-${{ matrix.runner }}
-          repository: AaryaTalgaonkar/openvpn3-linux
-          path: backend
-
-      # -----------------------------
-      # Download GUI Artifact
-      # -----------------------------
-      - name: Download GUI
-        uses: actions/download-artifact@v4
-        with:
-          name: gui-build-${{ matrix.runner }}
-          repository: AaryaTalgaonkar/openvpn3-gui
-          path: gui
+          path: linux\backend
 
       # -----------------------------
       # Create package structure
