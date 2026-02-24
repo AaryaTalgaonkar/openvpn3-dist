@@ -45,6 +45,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build-${{ matrix.runner }}
+          repository: AaryaTalgaonkar/openvpn3-linux
           path: backend
 
       # -----------------------------
@@ -54,6 +55,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: gui-build-${{ matrix.runner }}
+          repository: AaryaTalgaonkar/openvpn3-gui
           path: gui
 
       # -----------------------------
