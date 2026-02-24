@@ -77,10 +77,10 @@
                  Guid="fd34089c-da4d-4eb5-ac82-3f4778b28ab4">
 
         <File Id="OvpnAgentExe"
-              Source="openvpn3\ovpnagent.exe"
+              Source="windows\openvpn3\ovpnagent.exe"
               KeyPath="yes"/>
 
-        <File Source="openvpn3\omicliagent.exe"/>
+        <File Source="windows\openvpn3\omicliagent.exe"/>
 
         <!-- SERVICE INSTALL -->
         <ServiceInstall
@@ -102,7 +102,7 @@
           Wait="yes"/>
 
       </Component>
-        <Files Include="openvpn3\*.dll" />
+        <Files Include="windows\openvpn3\*.dll" />
     </ComponentGroup>
 
     <!-- ===================================================== -->
