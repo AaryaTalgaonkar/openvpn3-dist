@@ -56,7 +56,7 @@ jobs:
         workflow: build-win.yml
         branch: master
         name: backend-build-win-${{matrix.arch}}
-        path: windows/openvpn3
+        path: openvpn3
 
     - name: Install WiX
       shell: powershell
