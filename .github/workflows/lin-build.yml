@@ -63,6 +63,7 @@ jobs:
       - name: Prepare package root
         run: |
           cd linux
+          sed -i "s/Architecture:.*/Architecture: ${{ matrix.arch }}/" pkgroot/DEBIAN/control
           mkdir -p pkgroot/usr   
           
           cp -r backend/usr/* pkgroot/usr/
