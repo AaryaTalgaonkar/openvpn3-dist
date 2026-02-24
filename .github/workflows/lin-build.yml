@@ -38,6 +38,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      
+      - name: Download GUI artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          repo: AaryaTalgaonkar/openvpn3-gui
+          workflow: lin-build.yml
+          branch: main
+          name: OpenVPN3-GUI-${{ matrix.name }}
+          path: linux\gui
+
+      - name: Download GUI artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          repo: AaryaTalgaonkar/openvpn3-gui
+          workflow: lin-build.yml
+          branch: main
+          name: OpenVPN3-GUI-${{ matrix.name }}
+          path: linux\gui
+        
       # -----------------------------
       # Download Backend Artifact
       # -----------------------------
