@@ -65,46 +65,15 @@ jobs:
           mkdir -p pkgroot/DEBIAN
           mkdir -p pkgroot/usr
 
-          # copy backend
           cp -r backend/usr/* pkgroot/usr/
-
-          # copy gui
-          cp -r gui/usr/* pkgroot/usr/
-
-
-
-      # -----------------------------
-      # Create control file
-      # -----------------------------
-      - name: Create control file
-        run: |
-          cat <<EOF > pkgroot/DEBIAN/control
-          Package: openvpn3-gui
-          Version: 1.0.0
-          Section: net
-          Priority: optional
-          Architecture: ${{ matrix.arch }}
-          Maintainer: Your Name <you@example.com>
-          Depends: libc6 (>= 2.31), libssl3
-          Description: OpenVPN3 GUI with bundled backend
-           OpenVPN3 GUI and backend packaged together.
-          EOF
-
-      # -----------------------------
-      # Fix permissions
-      # -----------------------------
-      - name: Fix permissions
-        run: |
-          chmod -R 755 pkgroot/usr
-          chmod 755 pkgroot/DEBIAN
-          chmod 644 pkgroot/DEBIAN/control
+          cp -r gui/* pkgroot/usr/
 
       # -----------------------------
       # Build .deb
       # -----------------------------
       - name: Build deb
         run: |
-          dpkg-deb --build pkgroot openvpn3-gui_${{ matrix.arch }}.deb
+          dpkg-deb --build pkgroot openvpn3_${{ matrix.arch }}.deb
 
       # -----------------------------
       # Upload artifact
