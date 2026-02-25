@@ -38,7 +38,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      
+      - name: Create usr
+        run: mkdir -p linux/pkgroot/usr   
+        
       - name: Download GUI artifact
         uses: dawidd6/action-download-artifact@v3
         with:
@@ -46,7 +48,7 @@ jobs:
           workflow: lin-build.yml
           branch: main
           name: OpenVPN3-GUI-${{ matrix.name }}
-          path: linux/gui
+          path: linux/pkgroot/usr
 
       - name: Download Backend artifact
         uses: dawidd6/action-download-artifact@v3
@@ -55,7 +57,7 @@ jobs:
           workflow: lin-build.yml
           branch: master
           name: backend-build-${{ matrix.runner }}
-          path: linux/backend
+          path: linux/pkgroot/usr
 
       # -----------------------------
       # Create package structure
@@ -64,10 +66,9 @@ jobs:
         run: |
           cd linux
           sed -i "s/Architecture:.*/Architecture: ${{ matrix.arch }}/" pkgroot/DEBIAN/control
-          mkdir -p pkgroot/usr   
           
-          cp -r backend/usr/* pkgroot/usr/
-          cp -r gui/* pkgroot/usr/
+          
+
 
           chmod 755 pkgroot/DEBIAN/preinst
           chmod 755 pkgroot/DEBIAN/postinst
