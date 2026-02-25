@@ -58,7 +58,12 @@ jobs:
           branch: master
           name: backend-build-${{ matrix.runner }}
           path: linux/pkgroot
-
+          
+      - name: Debug after download
+        run: |
+          cd linux
+          ls -lR pkgroot
+          
       # -----------------------------
       # Create package structure
       # -----------------------------
