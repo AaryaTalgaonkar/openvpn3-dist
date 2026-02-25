@@ -41,18 +41,14 @@ jobs:
       - name: Download GUI tarball
         uses: actions/download-artifact@v4
         with:
-          repo: AaryaTalgaonkar/openvpn3-gui
-          workflow: lin-build.yml
-          branch: main
+          repository: AaryaTalgaonkar/openvpn3-gui
           name: OpenVPN3-GUI-${{ matrix.name }}
           path: linux
 
       - name: Download Backend tarball
         uses: actions/download-artifact@v4
         with:
-          repo: AaryaTalgaonkar/openvpn3-linux
-          workflow: lin-build.yml
-          branch: master
+          repository: AaryaTalgaonkar/openvpn3-linux
           name: backend-build-${{ matrix.runner }}
           path: linux
 
