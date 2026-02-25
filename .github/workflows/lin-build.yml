@@ -57,7 +57,7 @@ jobs:
           workflow: lin-build.yml
           branch: master
           name: backend-build-${{ matrix.runner }}
-          path: linux/pkgroot/usr
+          path: linux/pkgroot
 
       # -----------------------------
       # Create package structure
