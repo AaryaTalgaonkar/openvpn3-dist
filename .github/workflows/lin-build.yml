@@ -63,7 +63,7 @@ jobs:
           mkdir -p pkgroot
 
           echo "Extracting Backend..."
-          tar -xvf backend-${{ matrix.runner }}.tar -C pkgroot
+          tar -xvf backend-build-${{ matrix.runner }}.tar -C pkgroot
           
           echo "Extracting GUI..."
           tar -xvf OpenVPN3-GUI-${{ matrix.name }}.tar -C pkgroot
