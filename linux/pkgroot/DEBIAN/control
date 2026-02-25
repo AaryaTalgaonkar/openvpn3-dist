@@ -3,6 +3,6 @@ Version: 1.0.0
 Architecture: any
 Section: net
 Priority: optional
-Depends: libjsoncpp25, libtinyxml2-9
+Depends: libjsoncpp-dev, libtinyxml2-dev
 Maintainer: IIT Delhi  <you@example.com>
 Description: Custom OpenVPN3 with GUI Backend daemon and Qt GUI.
