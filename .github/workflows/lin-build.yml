@@ -37,9 +37,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Create usr
-        run: mkdir -p linux/pkgroot/usr   
         
       - name: Download GUI tarball
         uses: dawidd6/action-download-artifact@v3
