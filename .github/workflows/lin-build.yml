@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
         
       - name: Download GUI tarball
-        uses: dawidd6/action-download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           repo: AaryaTalgaonkar/openvpn3-gui
           workflow: lin-build.yml
@@ -48,12 +48,12 @@ jobs:
           path: linux
 
       - name: Download Backend tarball
-        uses: dawidd6/action-download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           repo: AaryaTalgaonkar/openvpn3-linux
           workflow: lin-build.yml
           branch: master
-          name: backend-${{ matrix.runner }}
+          name: backend-build-${{ matrix.runner }}
           path: linux
 
       - name: Extract tarballs into pkgroot
@@ -62,11 +62,11 @@ jobs:
 
           mkdir -p pkgroot
 
-          echo "Extracting GUI..."
-          tar -xzf OpenVPN3-GUI-${{ matrix.name }}.tar.gz -C pkgroot
-
           echo "Extracting Backend..."
-          tar -xzf backend-${{ matrix.runner }}.tar.gz -C pkgroot
+          tar -xvf backend-${{ matrix.runner }}.tar -C pkgroot
+          
+          echo "Extracting GUI..."
+          tar -xvf OpenVPN3-GUI-${{ matrix.name }}.tar -C pkgroot/usr
 
           echo "Cleaning up tar files..."
           rm -f *.tar.gz
