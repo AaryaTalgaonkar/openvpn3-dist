@@ -41,28 +41,42 @@ jobs:
       - name: Create usr
         run: mkdir -p linux/pkgroot/usr   
         
-      - name: Download GUI artifact
+      - name: Download GUI tarball
         uses: dawidd6/action-download-artifact@v3
         with:
           repo: AaryaTalgaonkar/openvpn3-gui
           workflow: lin-build.yml
           branch: main
           name: OpenVPN3-GUI-${{ matrix.name }}
-          path: linux/pkgroot/usr
+          path: linux
 
-      - name: Download Backend artifact
+      - name: Download Backend tarball
         uses: dawidd6/action-download-artifact@v3
         with:
           repo: AaryaTalgaonkar/openvpn3-linux
           workflow: lin-build.yml
           branch: master
-          name: backend-build-${{ matrix.runner }}
-          path: linux/pkgroot
-          
-      - name: Debug after download
+          name: backend-${{ matrix.runner }}
+          path: linux
+
+      - name: Extract tarballs into pkgroot
         run: |
           cd linux
+
+          mkdir -p pkgroot
+
+          echo "Extracting GUI..."
+          tar -xzf OpenVPN3-GUI-${{ matrix.name }}.tar.gz -C pkgroot
+
+          echo "Extracting Backend..."
+          tar -xzf backend-${{ matrix.runner }}.tar.gz -C pkgroot
+
+          echo "Cleaning up tar files..."
+          rm -f *.tar.gz
+
+          echo "Final pkgroot structure:"
           ls -lR pkgroot
+          
           
       # -----------------------------
       # Create package structure
@@ -71,9 +85,6 @@ jobs:
         run: |
           cd linux
           sed -i "s/Architecture:.*/Architecture: ${{ matrix.arch }}/" pkgroot/DEBIAN/control
-          
-          
-
 
           chmod 755 pkgroot/DEBIAN/preinst
           chmod 755 pkgroot/DEBIAN/postinst
