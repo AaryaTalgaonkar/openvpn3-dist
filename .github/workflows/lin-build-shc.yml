@@ -21,20 +21,10 @@ jobs:
           chmod +x iitdelhivpn.sh
           shc -f iitdelhivpn.sh -o iitdelhivpn
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: ncipollo/release-action@v1
+      - name: Upload deb to Release
+        if: github.event_name != 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
         with:
-          tag: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          body: "Automated release of SHC binary for version ${{ github.ref_name }}"
-          draft: false
-          prerelease: false
-
-      # 5. Upload compiled binary to the release
-      - name: Upload SHC binary to release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.ref_name }}
-          name: iitdelhivpn
-          files: iitdelhivpn
+          files: linux/iitdelhivpn
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
