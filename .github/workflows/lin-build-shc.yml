@@ -19,12 +19,12 @@ jobs:
         run: |
           cd linux
           chmod +x iitdelhivpn.sh
-          shc -f iitdelhivpn.sh -o iitdelhivpn
+          # shc -f iitdelhivpn.sh -o iitdelhivpn
 
       - name: Create tarball
         run: |
           cd linux
-          tar czvf iitdelhivpn.tar.gz iitdelhivpn
+          tar czvf iitdelhivpn.tar.gz iitdelhivpn.sh
           
       - name: Upload shc to Release
         if: github.event_name != 'workflow_dispatch'
