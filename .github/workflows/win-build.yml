@@ -2,6 +2,9 @@ name: Build Windows Installer
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'  
 
 jobs:
   package-windows:
@@ -111,6 +114,7 @@ jobs:
               -o IITDelhiVPN-${{matrix.arch}}.msi
 
     - name: Upload MSI
+      if: github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v4
       with:
         name: IITDelhiVPN-${{matrix.arch}}
