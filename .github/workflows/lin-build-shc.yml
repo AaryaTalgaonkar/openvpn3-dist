@@ -1,0 +1,40 @@
+name: Build and Release SHC Binary
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install SHC
+        run: sudo apt update && sudo apt install -y shc
+
+      - name: Compile SH script
+        run: |
+          cd linux
+          chmod +x iitdelhivpn.sh
+          shc -f iitdelhivpn.sh -o iitdelhivpn
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: "Automated release of SHC binary for version ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+
+      # 5. Upload compiled binary to the release
+      - name: Upload SHC binary to release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: iitdelhivpn
+          files: iitdelhivpn
