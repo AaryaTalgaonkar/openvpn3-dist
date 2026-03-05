@@ -37,7 +37,7 @@ install_package() {
   WORKDIR=$(mktemp -d)
   trap "rm -rf $WORKDIR" EXIT  # ensures temp dir is deleted on exit
 
-  VERSION="v1.0.0"
+  VERSION="v1.0.1"
   UBUNTU_VERSION=$(lsb_release -rs)
   ARCH=$(dpkg --print-architecture)
   URL="https://github.com/AaryaTalgaonkar/openvpn3-dist/releases/download/$VERSION/${PACKAGE_NAME}_${ARCH}-${UBUNTU_VERSION}.deb"
