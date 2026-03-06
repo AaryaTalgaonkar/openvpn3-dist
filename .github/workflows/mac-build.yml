@@ -1,4 +1,4 @@
-name: Build Mac Dpkg
+name: Build Mac .pkg
 
 on:
   workflow_dispatch:
@@ -44,8 +44,8 @@ jobs:
 
     - name: Extract GUI
       run: |
-        mkdir -p mac/pkgroot/Applications/app.app
-        tar -xvf gui-artifact/OpenVPN3-GUI-${{ matrix.name }}.tar -C mac/pkgroot/Applications/app.app
+        mkdir -p mac/pkgroot/Applications
+        tar -xvf gui-artifact/OpenVPN3-GUI-${{ matrix.name }}.tar -C mac/pkgroot/Applications
 
         
     - name: Download Backend artifact
@@ -67,14 +67,14 @@ jobs:
         cd mac
         pkgbuild --root pkgroot --scripts scripts --identifier org.openvpn.agent --version 1.0 --install-location / openvpn3-${{ matrix.name }}.pkg
 
-    # - name: Upload MSI
+    # - name: Upload .pkg
     #   if: github.event_name == 'workflow_dispatch'
     #   uses: actions/upload-artifact@v4
     #   with:
     #     name: IITDelhiVPN-${{ matrix.name }}
     #     path: mac/app.app
 
-    # - name: Upload deb to Release
+    # - name: Upload .pkg to Release
     #   if: github.event_name != 'workflow_dispatch'
     #   uses: softprops/action-gh-release@v2
     #   with:
