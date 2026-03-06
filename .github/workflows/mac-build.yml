@@ -40,7 +40,13 @@ jobs:
         workflow: mac-build.yml
         branch: main
         name: OpenVPN3-GUI-${{ matrix.name }}
-        path: mac/app.app
+        path: gui-artifact
+
+    - name: Extract GUI
+      run: |
+        mkdir -p mac/pkgroot/Applications/app.app
+        tar -xvf gui-artifact/OpenVPN3-GUI-${{ matrix.name }}.tar -C mac/pkgroot/Applications/app.app
+
         
     - name: Download Backend artifact
       uses: dawidd6/action-download-artifact@v3
@@ -48,21 +54,31 @@ jobs:
         repo: AaryaTalgaonkar/openvpn3
         workflow: mac-build.yml
         branch: master
-        name: backend-build-${{matrix.name}}
-        path: mac/app.app/Contents/openvpn3
+        name: backend-build-${{ matrix.name }}
+        path: backend-artifact
 
-    - name: Upload MSI
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v4
-      with:
-        name: IITDelhiVPN-${{matrix.arch}}
-        path: windows/IITDelhiVPN-${{matrix.arch}}.msi
+    - name: Extract backend
+      run: |
+        mkdir -p mac/pkgroot/Applications/app.app/Contents/openvpn3
+        tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C mac/pkgroot/Applications/app.app/Contents/openvpn3
 
-    - name: Upload deb to Release
-      if: github.event_name != 'workflow_dispatch'
-      uses: softprops/action-gh-release@v2
-      with:
-        files: windows/IITDelhiVPN-${{matrix.arch}}.msi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build pkg
+      run: |
+        cd mac
+        pkgbuild --root pkgroot --scripts scripts --identifier org.openvpn.agent --version 1.0 --install-location / openvpn3-${{ matrix.name }}.pkg
+
+    # - name: Upload MSI
+    #   if: github.event_name == 'workflow_dispatch'
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: IITDelhiVPN-${{ matrix.name }}
+    #     path: mac/app.app
+
+    # - name: Upload deb to Release
+    #   if: github.event_name != 'workflow_dispatch'
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: windows/IITDelhiVPN-${{matrix.arch}}.msi
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
