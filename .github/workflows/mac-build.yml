@@ -37,19 +37,19 @@ jobs:
       uses: dawidd6/action-download-artifact@v3
       with:
         repo: AaryaTalgaonkar/openvpn3-gui
-        workflow: win-build.yml
+        workflow: mac-build.yml
         branch: main
         name: OpenVPN3-GUI-${{ matrix.name }}
-        path: windows\gui
+        path: mac/gui
         
     - name: Download Backend artifact
       uses: dawidd6/action-download-artifact@v3
       with:
         repo: AaryaTalgaonkar/openvpn3
-        workflow: win-build.yml
+        workflow: mac-build.yml
         branch: master
-        name: backend-build-win-${{matrix.arch}}
-        path: windows\openvpn3
+        name: backend-build-${{matrix.name}}
+        path: mac/openvpn3
 
     - name: Install WiX
       shell: powershell
@@ -57,44 +57,6 @@ jobs:
         dotnet tool install --global wix
         echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
     
-    - name: Extract TAP Driver Files
-      shell: powershell
-      run: |
-    
-        $zipPath = "windows/tap-windows.zip"
-        $extractRoot = "tap-extracted"
-        $dest = "windows/tap-driver"
-    
-        Expand-Archive -Path $zipPath -DestinationPath $extractRoot -Force
-    
-        $archFolder = Get-ChildItem -Path $extractRoot -Recurse -Directory `
-                       | Where-Object { $_.Name -eq "${{ matrix.driver_arch }}" } `
-                       | Select-Object -First 1
-    
-        if (-not $archFolder) {
-            Write-Error "Architecture folder not found in zip."
-            exit 1
-        }
-    
-        if ("${{ matrix.os_type }}" -eq "win10") {
-            $source = Join-Path $archFolder.FullName "win10"
-        }
-        else {
-            $source = $archFolder.FullName
-        }
-    
-        if (!(Test-Path $source)) {
-            Write-Error "Driver source folder not found: $source"
-            exit 1
-        }
-    
-        New-Item -ItemType Directory -Path $dest -Force | Out-Null
-    
-        Copy-Item (Join-Path $source "OemVista*") -Destination $dest -Recurse -Force
-        Copy-Item (Join-Path $source "tap0901*") -Destination $dest -Force
-        Copy-Item (Join-Path $source "tapinstall.exe") -Destination $dest -Force
-    
-        Write-Host "Driver files extracted successfully from $source"
     - name: Build MSI
       shell: powershell
       run: |
