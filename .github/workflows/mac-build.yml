@@ -11,18 +11,20 @@ jobs:
     strategy:
       matrix:
         include:
-    
-          - name: Windows 11 amd64
-            runner: windows-2025
-            arch: x64
-            driver_arch: amd64
-            os_type: win11
-    
-          - name: Windows 11 arm64
-            runner: windows-2025
-            arch: arm64
-            driver_arch: arm64
-            os_type: win11
+          # --------------------
+          # macOS
+          # --------------------
+          - name: macOS arm64 14
+            runner: macos-14
+
+          - name: macOS arm64 15
+            runner: macos-15
+
+          - name: macOS arm64 26
+            runner: macos-26
+
+          - name: macOS amd64 15
+            runner: macos-15-intel
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
