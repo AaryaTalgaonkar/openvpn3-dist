@@ -67,29 +67,34 @@ jobs:
     
         mkdir -p mac/pkgroot/Library/PrivilegedHelperTools
         mv backend-extract/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
-
-    - name: Print pkgroot directory structure
-      run: |
-        echo "=== PKGROOT DIRECTORY STRUCTURE ==="
-        find mac -print | sed 's|^|/|'
+        
 
     - name: Build pkg
       run: |
         cd mac
         pkgbuild --root pkgroot --scripts scripts --identifier org.openvpn.agent --version 1.0 --install-location / openvpn3-${{ matrix.name }}.pkg
 
-    # - name: Upload .pkg
-    #   if: github.event_name == 'workflow_dispatch'
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: IITDelhiVPN-${{ matrix.name }}
-    #     path: mac/app.app
+    - name: Inspect .pkg
+      run: |
+        cd mac
+        pkgutil --expand-full openvpn3-${{ matrix.name }}.pkg expanded_pkg
+        echo "=== DIRECTORY STRUCTURE INSIDE PKG ==="
+        find expanded_pkg
 
-    # - name: Upload .pkg to Release
-    #   if: github.event_name != 'workflow_dispatch'
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     files: windows/IITDelhiVPN-${{matrix.arch}}.msi
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+    - name: Upload .pkg as artifact
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      with:
+        name: OpenVPN3-Mac-${{ matrix.name }}
+        path: mac/openvpn3-${{ matrix.name }}.pkg
+
+    - name: Upload .pkg to Release
+      if: github.event_name != 'workflow_dispatch'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: mac/openvpn3-${{ matrix.name }}.pkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
