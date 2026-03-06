@@ -1,0 +1,118 @@
+name: Build Mac Dpkg
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'  
+
+jobs:
+  package-mac:
+    strategy:
+      matrix:
+        include:
+    
+          - name: Windows 11 amd64
+            runner: windows-2025
+            arch: x64
+            driver_arch: amd64
+            os_type: win11
+    
+          - name: Windows 11 arm64
+            runner: windows-2025
+            arch: arm64
+            driver_arch: arm64
+            os_type: win11
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+
+    - name: Checkout packaging repo
+      uses: actions/checkout@v4
+
+    - name: Download GUI artifact
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        repo: AaryaTalgaonkar/openvpn3-gui
+        workflow: win-build.yml
+        branch: main
+        name: OpenVPN3-GUI-${{ matrix.name }}
+        path: windows\gui
+        
+    - name: Download Backend artifact
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        repo: AaryaTalgaonkar/openvpn3
+        workflow: win-build.yml
+        branch: master
+        name: backend-build-win-${{matrix.arch}}
+        path: windows\openvpn3
+
+    - name: Install WiX
+      shell: powershell
+      run: |
+        dotnet tool install --global wix
+        echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+    
+    - name: Extract TAP Driver Files
+      shell: powershell
+      run: |
+    
+        $zipPath = "windows/tap-windows.zip"
+        $extractRoot = "tap-extracted"
+        $dest = "windows/tap-driver"
+    
+        Expand-Archive -Path $zipPath -DestinationPath $extractRoot -Force
+    
+        $archFolder = Get-ChildItem -Path $extractRoot -Recurse -Directory `
+                       | Where-Object { $_.Name -eq "${{ matrix.driver_arch }}" } `
+                       | Select-Object -First 1
+    
+        if (-not $archFolder) {
+            Write-Error "Architecture folder not found in zip."
+            exit 1
+        }
+    
+        if ("${{ matrix.os_type }}" -eq "win10") {
+            $source = Join-Path $archFolder.FullName "win10"
+        }
+        else {
+            $source = $archFolder.FullName
+        }
+    
+        if (!(Test-Path $source)) {
+            Write-Error "Driver source folder not found: $source"
+            exit 1
+        }
+    
+        New-Item -ItemType Directory -Path $dest -Force | Out-Null
+    
+        Copy-Item (Join-Path $source "OemVista*") -Destination $dest -Recurse -Force
+        Copy-Item (Join-Path $source "tap0901*") -Destination $dest -Force
+        Copy-Item (Join-Path $source "tapinstall.exe") -Destination $dest -Force
+    
+        Write-Host "Driver files extracted successfully from $source"
+    - name: Build MSI
+      shell: powershell
+      run: |
+            cd windows
+            wix build Product.wxs Gui.wxs `
+              -arch ${{matrix.arch}} `
+              -o IITDelhiVPN-${{matrix.arch}}.msi
+
+    - name: Upload MSI
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      with:
+        name: IITDelhiVPN-${{matrix.arch}}
+        path: windows/IITDelhiVPN-${{matrix.arch}}.msi
+
+    - name: Upload deb to Release
+      if: github.event_name != 'workflow_dispatch'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: windows/IITDelhiVPN-${{matrix.arch}}.msi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
