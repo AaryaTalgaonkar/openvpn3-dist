@@ -56,11 +56,22 @@ jobs:
         branch: master
         name: backend-build-${{ matrix.name }}
         path: backend-artifact
-
+    
     - name: Extract backend
       run: |
+        mkdir backend-extract
+        tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
+    
         mkdir -p mac/pkgroot/Applications/app.app/Contents/openvpn3
-        tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C mac/pkgroot/Applications/app.app/Contents/openvpn3
+        mv backend-extract/omicliagent mac/pkgroot/Applications/app.app/Contents/openvpn3/
+    
+        mkdir -p mac/pkgroot/Library/PrivilegedHelperTools
+        mv backend-extract/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
+
+    - name: Print pkgroot directory structure
+      run: |
+        echo "=== PKGROOT DIRECTORY STRUCTURE ==="
+        find mac -print | sed 's|^|/|'
 
     - name: Build pkg
       run: |
