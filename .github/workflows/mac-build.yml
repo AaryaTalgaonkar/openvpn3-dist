@@ -40,7 +40,7 @@ jobs:
         workflow: mac-build.yml
         branch: main
         name: OpenVPN3-GUI-${{ matrix.name }}
-        path: mac/gui
+        path: mac/app.app
         
     - name: Download Backend artifact
       uses: dawidd6/action-download-artifact@v3
@@ -49,21 +49,7 @@ jobs:
         workflow: mac-build.yml
         branch: master
         name: backend-build-${{matrix.name}}
-        path: mac/openvpn3
-
-    - name: Install WiX
-      shell: powershell
-      run: |
-        dotnet tool install --global wix
-        echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
-    
-    - name: Build MSI
-      shell: powershell
-      run: |
-            cd windows
-            wix build Product.wxs Gui.wxs `
-              -arch ${{matrix.arch}} `
-              -o IITDelhiVPN-${{matrix.arch}}.msi
+        path: mac/app.app/Contents/openvpn3
 
     - name: Upload MSI
       if: github.event_name == 'workflow_dispatch'
