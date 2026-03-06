@@ -14,16 +14,16 @@ jobs:
           # --------------------
           # macOS
           # --------------------
-          - name: macOS arm64 14
+          - name: macOS-arm64-14
             runner: macos-14
 
-          - name: macOS arm64 15
+          - name: macOS-arm64-15
             runner: macos-15
 
-          - name: macOS arm64 26
+          - name: macOS-arm64-26
             runner: macos-26
 
-          - name: macOS amd64 15
+          - name: macOS-amd64-15
             runner: macos-15-intel
 
     name: ${{ matrix.name }}
