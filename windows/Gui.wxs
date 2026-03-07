@@ -11,15 +11,15 @@
                  Guid="55aad1f8-9bce-4073-b91c-678c25cc26df">
     
         <File Id="GuiExe"
-              Source="gui\app.exe"
+              Source="gui\IITDelhiVPN.exe"
               KeyPath="yes"/>
     
         <Shortcut
           Id="StartMenuShortcut"
           Directory="AppProgramsFolder"
-          Name="IITDelhi VPN"
+          Name="IITDelhiVPN"
           Description="IIT Delhi VPN Client"
-          Target="[GUIDIR]app.exe"
+          Target="[GUIDIR]IITDelhiVPN.exe"
           WorkingDirectory="GUIDIR"
           Icon="AppIcon"
           IconIndex="0"/>
@@ -33,7 +33,7 @@
     </ComponentGroup>
    <ComponentGroup Id="GuiAllOtherFiles" Directory="GUIDIR">
     <Files Include="gui\**\*.*">
-      <Exclude Files="gui\app.exe"/>
+      <Exclude Files="gui\IITDelhiVPN.exe"/>
     </Files>
     </ComponentGroup>
   </Fragment>
