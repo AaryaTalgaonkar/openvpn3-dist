@@ -62,9 +62,12 @@ jobs:
         mkdir backend-extract
         tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
     
-        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3
-        mv backend-extract/omicliagent mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/
-    
+        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/bin
+        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/lib        
+        mv backend-extract/bin/* mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/bin/
+        mv backend-extract/lib/* mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/lib/
+
+
         mkdir -p mac/pkgroot/Library/PrivilegedHelperTools
         mv backend-extract/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
         
