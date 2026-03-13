@@ -63,16 +63,13 @@ jobs:
         tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
     
         mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3
-        cp backend-extract/omicliagent/omicliagent mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/
+        cp backend-extract/omicliagent mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/
         
-        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/lib
-        cp backend-extract/omicliagent/lib/*   mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/lib/
+        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/libs
+        cp backend-extract/libs/*   mac/pkgroot/Applications/IITDelhiVPN.app/Contents/libs/
 
         mkdir -p mac/pkgroot/Library/PrivilegedHelperTools
-        cp backend-extract/agent/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
-        
-        mkdir -p mac/pkgroot/Library/PrivilegedHelperTools/lib
-        cp backend-extract/agent/lib/* mac/pkgroot/Library/PrivilegedHelperTools/lib/
+        cp backend-extract/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
         
     - name: Fix script permissions
       run: |
