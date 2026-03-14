@@ -10,7 +10,7 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Library/PrivilegedHelperTools/agent_macos</string>
+        <string>/Applications/IITDelhiVPN.app/Contents/openvpn3/agent_macos</string>
     </array>
 
     <key>RunAtLoad</key>
