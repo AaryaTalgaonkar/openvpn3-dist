@@ -31,10 +31,10 @@ jobs:
     steps:
 
     - name: Checkout packaging repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Download GUI artifact
-      uses: dawidd6/action-download-artifact@v3
+      uses: dawidd6/action-download-artifact@v18
       with:
         repo: AaryaTalgaonkar/openvpn3-gui
         workflow: mac-build.yml
@@ -49,27 +49,20 @@ jobs:
 
         
     - name: Download Backend artifact
-      uses: dawidd6/action-download-artifact@v3
+      uses: dawidd6/action-download-artifact@v18
       with:
         repo: AaryaTalgaonkar/openvpn3
         workflow: mac-build.yml
         branch: master
         name: backend-build-${{ matrix.name }}
         path: backend-artifact
-    
+        
     - name: Extract backend
       run: |
         mkdir backend-extract
         tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
-    
-        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3
-        cp backend-extract/omicliagent mac/pkgroot/Applications/IITDelhiVPN.app/Contents/openvpn3/
         
-        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/libs
-        cp backend-extract/libs/*   mac/pkgroot/Applications/IITDelhiVPN.app/Contents/libs/
-
-        mkdir -p mac/pkgroot/Library/PrivilegedHelperTools
-        cp backend-extract/agent_macos mac/pkgroot/Library/PrivilegedHelperTools/
+        cp -R backend-extract/* mac/pkgroot/Applications/IITDelhiVPN.app/Contents/
         
     - name: Fix script permissions
       run: |
@@ -91,7 +84,7 @@ jobs:
 
     - name: Upload .pkg as artifact
       if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: OpenVPN3-Mac-${{ matrix.name }}
         path: mac/openvpn3-${{ matrix.name }}.pkg
