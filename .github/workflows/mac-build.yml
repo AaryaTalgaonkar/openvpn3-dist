@@ -63,6 +63,12 @@ jobs:
         tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
         
         cp -R backend-extract/* mac/pkgroot/Applications/IITDelhiVPN.app/Contents/
+
+    - name: Install uninstaller into app bundle
+      run: |
+        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources
+        cp mac/uninstall.sh mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources/
+        chmod +x mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources/uninstall.sh
         
     - name: Fix script permissions
       run: |
