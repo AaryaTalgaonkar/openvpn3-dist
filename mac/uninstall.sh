@@ -1,6 +1,10 @@
 #!/bin/bash
-
 set -e
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root (use sudo)"
+    exit 1
+fi
 
 LABEL="com.openvpn.agent"
 PLIST="/Library/LaunchDaemons/com.openvpn.agent.plist"
@@ -9,24 +13,17 @@ LOG="/var/log/ovpnagent.error.log"
 
 echo "Stopping OpenVPN agent..."
 
-# Stop the launch daemon if loaded
 if launchctl list | grep -q "$LABEL"; then
-    sudo launchctl bootout system "$PLIST"
+    launchctl bootout system "$PLIST"
 fi
 
 echo "Removing launch daemon..."
-if [ -f "$PLIST" ]; then
-    sudo rm "$PLIST"
-fi
+[ -f "$PLIST" ] && rm "$PLIST"
 
 echo "Removing logs..."
-if [ -f "$LOG" ]; then
-    sudo rm "$LOG"
-fi
+[ -f "$LOG" ] && rm "$LOG"
 
 echo "Removing application..."
-if [ -d "$APP" ]; then
-    sudo rm -rf "$APP"
-fi
+[ -d "$APP" ] && rm -rf "$APP"
 
 echo "Uninstall complete."
