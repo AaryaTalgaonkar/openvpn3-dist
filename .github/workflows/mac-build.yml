@@ -85,8 +85,27 @@ jobs:
         pkgutil --expand-full openvpn3-${{ matrix.name }}.pkg expanded_pkg
         echo "=== DIRECTORY STRUCTURE INSIDE PKG ==="
         find expanded_pkg
+    
+    - name: Package .app bundle
+      run: |
+        cd mac/pkgroot/Applications
+        tar -cvf IITDelhiVPN-${{ matrix.name }}.tar IITDelhiVPN.app
+    
+    - name: Upload .app as artifact
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v6
+      with:
+        name: IITDelhiVPN-App-${{ matrix.name }}
+        path: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
 
-
+    
+    # - name: Upload .app to Release
+    #   if: github.event_name != 'workflow_dispatch'
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload .pkg as artifact
       if: github.event_name == 'workflow_dispatch'
