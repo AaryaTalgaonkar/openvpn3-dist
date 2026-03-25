@@ -74,18 +74,6 @@ jobs:
       run: |
         chmod +x mac/scripts/postinstall
 
-    - name: Package .app bundle
-      run: |
-        cd mac/pkgroot/Applications
-        tar -cvf IITDelhiVPN-${{ matrix.name }}.tar IITDelhiVPN.app
-    
-    - name: Upload .app as artifact
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v6
-      with:
-        name: IITDelhiVPN-App-${{ matrix.name }}
-        path: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
-
     - name: Build pkg
       run: |
         cd mac
@@ -98,6 +86,18 @@ jobs:
         echo "=== DIRECTORY STRUCTURE INSIDE PKG ==="
         find expanded_pkg
 
+    - name: Package .app bundle
+      run: |
+        xattr -cr mac/pkgroot/Applications/IITDelhiVPN.app
+        cd mac/pkgroot/Applications
+        tar -cvf IITDelhiVPN-${{ matrix.name }}.tar IITDelhiVPN.app
+    
+    - name: Upload .app as artifact
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v6
+      with:
+        name: IITDelhiVPN-App-${{ matrix.name }}
+        path: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
     
     # - name: Upload .app to Release
     #   if: github.event_name != 'workflow_dispatch'
