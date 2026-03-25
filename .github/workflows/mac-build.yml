@@ -74,18 +74,6 @@ jobs:
       run: |
         chmod +x mac/scripts/postinstall
 
-    - name: Build pkg
-      run: |
-        cd mac
-        pkgbuild --root pkgroot --scripts scripts --identifier org.openvpn.agent --version 1.0 --install-location / openvpn3-${{ matrix.name }}.pkg
-
-    - name: Inspect .pkg
-      run: |
-        cd mac
-        pkgutil --expand-full openvpn3-${{ matrix.name }}.pkg expanded_pkg
-        echo "=== DIRECTORY STRUCTURE INSIDE PKG ==="
-        find expanded_pkg
-    
     - name: Package .app bundle
       run: |
         cd mac/pkgroot/Applications
@@ -97,6 +85,18 @@ jobs:
       with:
         name: IITDelhiVPN-App-${{ matrix.name }}
         path: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
+
+    - name: Build pkg
+      run: |
+        cd mac
+        pkgbuild --root pkgroot --scripts scripts --identifier org.openvpn.agent --version 1.0 --install-location / openvpn3-${{ matrix.name }}.pkg
+
+    - name: Inspect .pkg
+      run: |
+        cd mac
+        pkgutil --expand-full openvpn3-${{ matrix.name }}.pkg expanded_pkg
+        echo "=== DIRECTORY STRUCTURE INSIDE PKG ==="
+        find expanded_pkg
 
     
     # - name: Upload .app to Release
