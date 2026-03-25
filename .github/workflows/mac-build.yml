@@ -88,7 +88,6 @@ jobs:
 
     - name: Package .app bundle
       run: |
-        xattr -cr mac/pkgroot/Applications/IITDelhiVPN.app
         cd mac/pkgroot/Applications
         tar -cvf IITDelhiVPN-${{ matrix.name }}.tar IITDelhiVPN.app
     
