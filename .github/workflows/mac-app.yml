@@ -1,0 +1,95 @@
+name: Build Mac .pkg
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'  
+
+jobs:
+  package-mac:
+    strategy:
+      matrix:
+        include:
+          # --------------------
+          # macOS
+          # --------------------
+          - name: macOS-arm64-14
+            runner: macos-14
+
+          - name: macOS-arm64-15
+            runner: macos-15
+
+          - name: macOS-arm64-26
+            runner: macos-26
+
+          - name: macOS-amd64-15
+            runner: macos-15-intel
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+
+    - name: Checkout packaging repo
+      uses: actions/checkout@v6
+
+    - name: Download GUI artifact
+      uses: dawidd6/action-download-artifact@v18
+      with:
+        repo: AaryaTalgaonkar/openvpn3-gui
+        workflow: mac-build.yml
+        branch: main
+        name: OpenVPN3-GUI-${{ matrix.name }}
+        path: gui-artifact
+
+    - name: Extract GUI
+      run: |
+        mkdir -p mac/pkgroot/Applications
+        tar -xvf gui-artifact/OpenVPN3-GUI-${{ matrix.name }}.tar -C mac/pkgroot/Applications
+
+        
+    - name: Download Backend artifact
+      uses: dawidd6/action-download-artifact@v18
+      with:
+        repo: AaryaTalgaonkar/openvpn3
+        workflow: mac-build.yml
+        branch: master
+        name: backend-build-${{ matrix.name }}
+        path: backend-artifact
+        
+    - name: Extract backend
+      run: |
+        mkdir backend-extract
+        tar -xvf backend-artifact/backend-build-${{ matrix.name }}.tar -C backend-extract
+        
+        cp -R backend-extract/* mac/pkgroot/Applications/IITDelhiVPN.app/Contents/
+
+    - name: Install uninstaller into app bundle
+      run: |
+        mkdir -p mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources
+        cp mac/uninstall.sh mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources/
+        chmod +x mac/pkgroot/Applications/IITDelhiVPN.app/Contents/Resources/uninstall.sh
+        
+    - name: Fix script permissions
+      run: |
+        chmod +x mac/scripts/postinstall
+
+    - name: Package .app bundle
+      run: |
+        cd mac/pkgroot/Applications
+        tar -cvf IITDelhiVPN-${{ matrix.name }}.tar IITDelhiVPN.app
+    
+    - name: Upload .app as artifact
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v6
+      with:
+        name: IITDelhiVPN-App-${{ matrix.name }}
+        path: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
+    
+    # - name: Upload .app to Release
+    #   if: github.event_name != 'workflow_dispatch'
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: mac/pkgroot/Applications/IITDelhiVPN-${{ matrix.name }}.tar
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
