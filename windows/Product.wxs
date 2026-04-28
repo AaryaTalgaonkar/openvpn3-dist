@@ -137,10 +137,10 @@
       Impersonate="no"
       Return="check"/>
 
-    
     <CustomAction
       Id="RemoveTapDriverStore"
-      ExeCommand='powershell.exe -ExecutionPolicy Bypass -File "[TAPDIR]remove-tap.ps1"'
+      Directory="SystemFolder"
+      ExeCommand='powershell.exe -ExecutionPolicy Bypass -File "[TAPDIR]remove-tap.ps1" >> "%TEMP%\tap-remove.log" 2>&1'
       Execute="deferred"
       Impersonate="no"
       Return="ignore"/>
