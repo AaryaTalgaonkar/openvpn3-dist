@@ -109,8 +109,7 @@ jobs:
       shell: powershell
       run: |
             cd windows
-            $env:WIX_ACCEPT_OSMF_EULA = "1"
-            wix build Product.wxs Gui.wxs `
+            wix build -acceptEula wix7 Product.wxs Gui.wxs `
               -arch ${{matrix.arch}} `
               -o IITDelhiVPN-${{matrix.arch}}.msi
 
