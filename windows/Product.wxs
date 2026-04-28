@@ -26,6 +26,7 @@
           <Directory Id="TAPDIR" Name="tap-win"/>
         </Directory>
 
+
       </Directory>
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder">
@@ -66,8 +67,16 @@
         <File Source="tap-driver\tap0901.cat"/>
 
       </Component>
-
     </ComponentGroup>
+
+    <ComponentGroup Id="TapScripts" Directory="TAPDIR">
+      <Component Id="RemoveTapScriptComponent" Guid="c9926af4-e88e-404b-a942-94c48a9fe27f">
+        <File Id="RemoveTapScriptFile"
+              Source="remove-tap.ps1"
+              KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+
 
     <!-- ===================================================== -->
     <!-- OPENVPN AGENT + SERVICE -->
@@ -128,6 +137,14 @@
       Impersonate="no"
       Return="check"/>
 
+    
+    <CustomAction
+      Id="RemoveTapDriverStore"
+      ExeCommand='powershell.exe -ExecutionPolicy Bypass -File "[TAPDIR]remove-tap.ps1"'
+      Execute="deferred"
+      Impersonate="no"
+      Return="ignore"/>
+
     <!-- ===================================================== -->
     <!-- EXECUTION SEQUENCE -->
     <!-- ===================================================== -->
@@ -138,8 +155,14 @@
         After="InstallFiles"
         Condition="NOT Installed"/>
 
+
       <Custom
         Action="RemoveTap"
+        Before="RemoveTapDriverStore"
+        Condition="Installed"/>
+      
+      <Custom
+        Action="RemoveTapDriverStore"
         Before="RemoveFiles"
         Condition="Installed"/>
 
@@ -154,6 +177,7 @@
 
       <ComponentRef Id="RegistryEntries"/>
       <ComponentGroupRef Id="TapFiles"/>
+      <ComponentGroupRef Id="TapScripts"/>
       <ComponentGroupRef Id="OpenVPNFiles"/>
       <ComponentGroupRef Id="GuiExeGroup"/>
       <ComponentGroupRef Id="GuiAllOtherFiles"/>
