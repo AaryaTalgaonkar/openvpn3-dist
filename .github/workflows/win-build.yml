@@ -67,12 +67,19 @@ jobs:
         dotnet tool install --global wix
         echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
         wix eula accept wix7
-        wix extension add WixToolset.Util.wixext
-        wix extension add WixToolset.UI.wixext
+        mkdir wixext
     
-    - name: Extract TAP Driver Files
-      shell: powershell
-      run: |
+        dotnet nuget download WixToolset.UI.wixext `
+          --version 7.0.0 `
+          --output wixext
+    
+        dotnet nuget download WixToolset.Util.wixext `
+          --version 7.0.0 `
+          --output wixext
+        
+        - name: Extract TAP Driver Files
+          shell: powershell
+          run: |
     
         $zipPath = "windows/tap-windows.zip"
         $extractRoot = "tap-extracted"
@@ -113,10 +120,10 @@ jobs:
       run: |
             cd windows
             wix build Product.wxs Gui.wxs `
-              -arch ${{matrix.arch}} `
-              -o IITDelhiVPN-${{matrix.arch}}.msi `
-              -ext WixToolset.UI.wixext `
-              -ext WixToolset.Util.wixext
+              -arch x64 `
+              -o IITDelhiVPN-x64.msi `
+              -ext "..\wixext\WixToolset.UI.wixext.7.0.0\tools\net6.0\wixext6\WixToolset.UI.wixext.dll" `
+              -ext "..\wixext\WixToolset.Util.wixext.7.0.0\tools\net6.0\wixext6\WixToolset.Util.wixext.dll"
 
     - name: Upload MSI
       if: github.event_name == 'workflow_dispatch'
