@@ -128,49 +128,62 @@
 
     <!-- Install TAP driver -->
 
-    <util:QuietExec
-        Id="InstallTap"
-        Command='"[TAPDIR]tapinstall.exe" install "[TAPDIR]OemVista.inf" tap0901'
-        Execute="deferred"
-        Impersonate="no"
-        Return="check"/>
 
-    <!-- Remove TAP driver -->
+    <Property Id="InstallTap_CmdLine" Value='"[TAPDIR]tapinstall.exe" install "[TAPDIR]OemVista.inf" tap0901' />
     <CustomAction
-      Id="RemoveTap"
-      FileRef="TapInstallExe"
-      ExeCommand='remove tap0901'
+      Id="InstallTap"
+      BinaryRef="Wix4UtilAsm"
+      DllEntry="WixQuietExec"
       Execute="deferred"
       Impersonate="no"
       Return="check"/>
+
+    <!-- 2. Remove TAP Driver via Exe -->
+    <CustomAction
+      Id="RemoveTap"
+      FileRef="TapInstallExe"
+      ExeCommand="remove tap0901"
+      Execute="deferred"
+      Impersonate="no"
+      Return="ignore"/> 
     
-    <util:QuietExec
-        Id="RemoveTapDriverStore"
-        Command='powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "[TAPDIR]remove-tap.ps1"'
-        Execute="deferred"
-        Impersonate="no"
-        Return="ignore"/>
+    <!-- 3. Remove TAP Driver Store via PowerShell (Uses WixQuietExec) -->
+    <Property Id="RemoveTapDriverStore_CmdLine" Value='&quot;[SystemFolder]windowspowershell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[TAPDIR]remove-tap.ps1&quot;' />
+    <CustomAction
+      Id="RemoveTapDriverStore"
+      BinaryRef="Wix4UtilAsm"
+      DllEntry="WixQuietExec"
+      Execute="deferred"
+      Impersonate="no"
+      Return="ignore"/>
 
     <!-- ===================================================== -->
     <!-- EXECUTION SEQUENCE -->
     <!-- ===================================================== -->
     <InstallExecuteSequence>
 
+
+
+      <!-- Runs during installation after files hit the disk -->
       <Custom
         Action="InstallTap"
         After="InstallFiles"
         Condition="NOT Installed"/>
 
-
+      <!-- Runs during uninstall while files still exist on disk -->
       <Custom
         Action="RemoveTap"
         Before="RemoveTapDriverStore"
-        Condition="Installed"/>
+        Condition="REMOVE=&quot;ALL&quot;"/>
       
       <Custom
         Action="RemoveTapDriverStore"
         Before="RemoveFiles"
-        Condition="Installed"/>
+        Condition="REMOVE=&quot;ALL&quot;"/>
+
+
+
+
 
     </InstallExecuteSequence>
 
