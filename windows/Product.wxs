@@ -129,7 +129,8 @@
     <!-- ===================================================== -->
     <!-- 1. Install TAP Driver -->
     <SetProperty
-        Id="WixQuietExecCmdLine"
+        Id="SetInstallTapCmd"
+        Property="WixQuietExecCmdLine"
         Value="&quot;[TAPDIR]tapinstall.exe&quot; install &quot;[TAPDIR]OemVista.inf&quot; tap0901"
         Before="InstallTap"
         Sequence="execute" />
@@ -145,7 +146,8 @@
     
     <!-- 2. Remove TAP Driver -->
     <SetProperty
-        Id="WixQuietExecCmdLine"
+        Id="SetRemoveTapCmd"
+        Property="WixQuietExecCmdLine"
         Value="&quot;[TAPDIR]tapinstall.exe&quot; remove tap0901"
         Before="RemoveTap"
         Sequence="execute" />
@@ -161,7 +163,8 @@
     
     <!-- 3. Remove TAP Driver Store -->
     <SetProperty
-        Id="WixQuietExecCmdLine"
+        Id="SetRemoveTapStoreCmd"
+        Property="WixQuietExecCmdLine"
         Value="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[TAPDIR]remove-tap.ps1&quot;"
         Before="RemoveTapDriverStore"
         Sequence="execute" />
