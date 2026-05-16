@@ -122,16 +122,18 @@
         <Files Include="openvpn3\*.dll" />
     </ComponentGroup>
 
+
+
     <!-- ===================================================== -->
     <!-- CUSTOM ACTIONS -->
     <!-- ===================================================== -->
 
-
-    <!-- 1. Install TAP Driver Setup (Uses SetProperty to safely format paths) -->
+    <!-- 1. Install TAP Driver Setup (Added Sequence="execute") -->
     <SetProperty 
       Id="InstallTap_CmdLine" 
       Value="&quot;[TAPDIR]tapinstall.exe&quot; install &quot;[TAPDIR]OemVista.inf&quot; tap0901" 
-      Before="InstallTap" />
+      Before="InstallTap"
+      Sequence="execute" /> <!-- Forces evaluation only during execution -->
       
     <CustomAction
       Id="InstallTap"
@@ -150,11 +152,12 @@
       Impersonate="no"
       Return="ignore"/>
     
-    <!-- 3. Remove TAP Driver Store via PowerShell (Uses SetProperty to safely format paths) -->
+    <!-- 3. Remove TAP Driver Store via PowerShell (Added Sequence="execute") -->
     <SetProperty 
       Id="RemoveTapDriverStore_CmdLine" 
       Value="&quot;[SystemFolder]windowspowershell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[TAPDIR]remove-tap.ps1&quot;" 
-      Before="RemoveTapDriverStore" />
+      Before="RemoveTapDriverStore"
+      Sequence="execute" /> <!-- Forces evaluation only during execution -->
 
     <CustomAction
       Id="RemoveTapDriverStore"
@@ -163,6 +166,7 @@
       Execute="deferred"
       Impersonate="no"
       Return="ignore"/>
+
 
 
     <!-- ===================================================== -->
