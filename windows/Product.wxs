@@ -13,15 +13,13 @@
     UpgradeCode="949A75F8-69B4-4981-B2FA-60695CEED6FE"
     Scope="perMachine">
 
+    <Property Id="ARPUNINSTALLCMD" Value="msiexec.exe /x [ProductCode] /qf" />
+
     <MajorUpgrade
         DowngradeErrorMessage="A newer version is already installed." />
 
-    <ui:WixUI Id="WixUI_Mondo" />
-    
-    <Property Id="ARPNOMODIFY" Value="1" />
-    <Property Id="ARPNOREPAIR" Value="1" />    
+    <ui:WixUI Id="WixUI_InstallDir" /> 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
-    <Property Id="REBOOT" Value="ReallySuppress" />
     <Icon Id="AppIcon" SourceFile="logo.ico"/>
     <Property Id="ARPPRODUCTICON" Value="AppIcon"/>
 
