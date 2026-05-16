@@ -68,19 +68,16 @@ jobs:
         echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
         wix eula accept wix7
         mkdir wixext
-    
         dotnet nuget download WixToolset.UI.wixext `
           --version 7.0.0 `
           --output wixext
-    
         dotnet nuget download WixToolset.Util.wixext `
           --version 7.0.0 `
           --output wixext
         
-        - name: Extract TAP Driver Files
-          shell: powershell
-          run: |
-    
+    - name: Extract TAP Driver Files
+      shell: powershell
+      run: |
         $zipPath = "windows/tap-windows.zip"
         $extractRoot = "tap-extracted"
         $dest = "windows/tap-driver"
