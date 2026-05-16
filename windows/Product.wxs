@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+<Wix
+    xmlns="http://wixtoolset.org/schemas/v4/wxs"
+    xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+    xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
   <Package
     Name="IITDelhiVPN"
@@ -8,6 +12,9 @@
     Manufacturer="IITDelhi"
     UpgradeCode="949A75F8-69B4-4981-B2FA-60695CEED6FE"
     Scope="perMachine">
+
+    <ui:WixUI Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 
     <Icon Id="AppIcon" SourceFile="logo.ico"/>
     <Property Id="ARPPRODUCTICON" Value="AppIcon"/>
@@ -120,13 +127,13 @@
     <!-- ===================================================== -->
 
     <!-- Install TAP driver -->
-    <CustomAction
-      Id="InstallTap"
-      FileRef="TapInstallExe"
-      ExeCommand='install "[TAPDIR]OemVista.inf" tap0901'
-      Execute="deferred"
-      Impersonate="no"
-      Return="check"/>
+
+    <util:QuietExec
+        Id="InstallTap"
+        Command='"[TAPDIR]tapinstall.exe" install "[TAPDIR]OemVista.inf" tap0901'
+        Execute="deferred"
+        Impersonate="no"
+        Return="check"/>
 
     <!-- Remove TAP driver -->
     <CustomAction
@@ -136,14 +143,13 @@
       Execute="deferred"
       Impersonate="no"
       Return="check"/>
-
-    <CustomAction
-      Id="RemoveTapDriverStore"
-      Directory="SystemFolder"
-      ExeCommand='powershell.exe -ExecutionPolicy Bypass -File "[TAPDIR]remove-tap.ps1"'
-      Execute="deferred"
-      Impersonate="no"
-      Return="ignore"/>
+    
+    <util:QuietExec
+        Id="RemoveTapDriverStore"
+        Command='powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "[TAPDIR]remove-tap.ps1"'
+        Execute="deferred"
+        Impersonate="no"
+        Return="ignore"/>
 
     <!-- ===================================================== -->
     <!-- EXECUTION SEQUENCE -->
