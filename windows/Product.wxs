@@ -127,47 +127,52 @@
     <!-- ===================================================== -->
     <!-- CUSTOM ACTIONS -->
     <!-- ===================================================== -->
-
-    <!-- 1. Install TAP Driver Setup (Added Sequence="execute") -->
-    <SetProperty 
-      Id="InstallTap_CmdLine" 
-      Value="&quot;[TAPDIR]tapinstall.exe&quot; install &quot;[TAPDIR]OemVista.inf&quot; tap0901" 
-      Before="InstallTap"
-      Sequence="execute" /> <!-- Forces evaluation only during execution -->
-      
-    <CustomAction
-      Id="InstallTap"
-      BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
-      DllEntry="WixQuietExec"
-      Execute="deferred"
-      Impersonate="no"
-      Return="check"/>
-
-    <!-- 2. Remove TAP Driver via Exe -->
-    <CustomAction
-      Id="RemoveTap"
-      FileRef="TapInstallExe"
-      ExeCommand="remove tap0901"
-      Execute="deferred"
-      Impersonate="no"
-      Return="ignore"/>
+    <!-- 1. Install TAP Driver -->
+    <SetProperty
+        Id="WixQuietExecCmdLine"
+        Value="&quot;[TAPDIR]tapinstall.exe&quot; install &quot;[TAPDIR]OemVista.inf&quot; tap0901"
+        Before="InstallTap"
+        Sequence="execute" />
     
-    <!-- 3. Remove TAP Driver Store via PowerShell (Added Sequence="execute") -->
-    <SetProperty 
-      Id="RemoveTapDriverStore_CmdLine" 
-      Value="&quot;[SystemFolder]windowspowershell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[TAPDIR]remove-tap.ps1&quot;" 
-      Before="RemoveTapDriverStore"
-      Sequence="execute" /> <!-- Forces evaluation only during execution -->
-
     <CustomAction
-      Id="RemoveTapDriverStore"
-      BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
-      DllEntry="WixQuietExec"
-      Execute="deferred"
-      Impersonate="no"
-      Return="ignore"/>
-
-
+        Id="InstallTap"
+        BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+        DllEntry="WixQuietExec"
+        Execute="deferred"
+        Impersonate="no"
+        Return="check"/>
+    
+    
+    <!-- 2. Remove TAP Driver -->
+    <SetProperty
+        Id="WixQuietExecCmdLine"
+        Value="&quot;[TAPDIR]tapinstall.exe&quot; remove tap0901"
+        Before="RemoveTap"
+        Sequence="execute" />
+    
+    <CustomAction
+        Id="RemoveTap"
+        BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+        DllEntry="WixQuietExec"
+        Execute="deferred"
+        Impersonate="no"
+        Return="check"/>
+    
+    
+    <!-- 3. Remove TAP Driver Store -->
+    <SetProperty
+        Id="WixQuietExecCmdLine"
+        Value="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[TAPDIR]remove-tap.ps1&quot;"
+        Before="RemoveTapDriverStore"
+        Sequence="execute" />
+    
+    <CustomAction
+        Id="RemoveTapDriverStore"
+        BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+        DllEntry="WixQuietExec"
+        Execute="deferred"
+        Impersonate="no"
+        Return="check"/>
 
     <!-- ===================================================== -->
     <!-- EXECUTION SEQUENCE -->
