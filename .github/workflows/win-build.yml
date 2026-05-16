@@ -60,15 +60,18 @@ jobs:
         branch: master
         name: backend-build-win-${{matrix.arch}}
         path: windows\openvpn3
-
+    
     - name: Install WiX
       shell: powershell
       run: |
         dotnet tool install --global wix
-        echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+        echo "$env:USERPROFILE\.dotnet\tools" `
+          | Out-File -Append -Encoding ascii $env:GITHUB_PATH
         wix eula accept wix7
-        dotnet add package WixToolset.UI.wixext --version 7.0.0
-        dotnet add package WixToolset.Util.wixext --version 7.0.0
+        wix extension add WixToolset.UI.wixext --global
+        wix extension add WixToolset.Util.wixext --global
+
+
         
     - name: Extract TAP Driver Files
       shell: powershell
