@@ -66,6 +66,7 @@ jobs:
       run: |
         dotnet tool install --global wix
         echo "$env:USERPROFILE\.dotnet\tools" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+        wix eula accept wix7
         wix extension add WixToolset.Util.wixext
         wix extension add WixToolset.UI.wixext
     
@@ -111,7 +112,7 @@ jobs:
       shell: powershell
       run: |
             cd windows
-            wix build -acceptEula wix7 Product.wxs Gui.wxs `
+            wix build Product.wxs Gui.wxs `
               -arch ${{matrix.arch}} `
               -o IITDelhiVPN-${{matrix.arch}}.msi `
               -ext WixToolset.UI.wixext `
